@@ -1,0 +1,50 @@
+#include <unistd.h>
+#include <fcntl.h>
+#include <iostream>
+#include <vector>
+
+
+int main(int argc, char** argv){
+
+if(argc != 2){
+
+std:: cout << "Wrong arguments" << std::endl;
+exit(1);
+}
+
+int fd = open(argv[1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+
+if(fd = -1){
+std::perror("open");
+exit(EXIT_FAILURE);
+}
+
+int buffer = 4096;
+std::vector<char> buf(buffer);
+
+ssize_t bytes_to_read;
+ssize_t bytes_written;
+
+
+while((bytes_to_read = read(0, buf.data(), buffer)) > 0){
+ bytes_written = write(fd, buf.data(), bytes_to_read);
+
+if(bytes_written == -1){
+std::perror("write");
+exit(1);
+}
+}
+
+if(bytes_to_read == -1){
+std::perror("read");
+exit(1);
+}
+
+if(close(fd) == -1){
+std::perror("close");
+exit(1);
+}
+
+
+return 0;
+}
